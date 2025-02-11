@@ -3,9 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <title>To the Power of Math!</title>
-</head>
+    <!-- Styling for the client UI -->
+    <style>
+        h1 {
+            color: #FFFFFF;
+            font-family: system-ui;
+            margin-left: 20px;
+        }
+        body {
+            background-color: #222629;
+            font-family: system-ui;
+        }
+        label {
+            color: #86C232;
+            font-size: 20px;
+            margin-left: 20px;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #86C232;
+            border: none;
+            color: #FFFFFF;
+            font-size: 20px;
+            font-weight: bold;
+            margin-left: 30px;
+            margin-top: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        input {
+            color: #222629;
+            font-size: 20px;
+            margin-left: 10px;
+            margin-top: 20px;
+            padding: 5px;
+            width: 120px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px;
+        }
+    </style>
+    <script>
+        // callAPI function that takes the base and exponent numbers as parameters
+        const callAPI = (base, exponent) => {
+            // Validate inputs
+            if (isNaN(base) || isNaN(exponent) || base === "" || exponent === "") {
+                alert("Please enter valid numeric values for base and exponent.");
+                return;
+            }
 
+            // Instantiate a headers object
+            const myHeaders = new Headers();
+            // Add content type header to object
+            myHeaders.append("Content-Type", "application/json");
+
+            // Using built-in JSON utility package to turn object to string and store in a variable
+            const raw = JSON.stringify({ base: base, exponent: exponent });
+
+            // Create a JSON object with parameters for API call and store in a variable
+            const requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            // Make API call with parameters and use promises to get response
+            fetch("https://d4ym7zwnn0.execute-api.ap-south-1.amazonaws.com/dev", requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.body) {
+                        alert(result.body);
+                    } else {
+                        alert("Unexpected response from server.");
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        };
+    </script>
+</head>
 <body>
-    <h1>To the Power of Math</h1>
+    <h1>TO THE POWER OF MATH!</h1>
+    <form>
+        <label for="base">Base number:</label>
+        <input type="text" id="base" placeholder="Enter base">
+        <label for="exponent">...to the power of:</label>
+        <input type="text" id="exponent" placeholder="Enter exponent">
+        <!-- set button onClick method to call function we defined passing input values as parameters -->
+        <button type="button" onclick="callAPI(document.getElementById('base').value, document.getElementById('exponent').value)">
+            CALCULATE
+        </button>
+    </form>
 </body>
 </html>
